@@ -665,6 +665,12 @@ const SCORE = [
    to the static numbers above if data.json is missing/unreachable
    (e.g. opening this file directly via file://, which blocks fetch()).
    ===================================================================== */
+// v assumed in billions of dollars; auto-switches to $B display for sub-$1T values
+// (e.g. ON RRP balances, which have drained to near-zero)
+function fmtBillions(v){
+  return Math.abs(v) >= 1000 ? `$${(v/1000).toFixed(2)}T` : `$${v.toFixed(1)}B`;
+}
+
 const FRED_DISPLAY = {
   T10Y2Y:         v => `~${v>=0?'+':''}${Math.round(v*100)}bp`,
   T10Y3M:         v => `~${v>=0?'+':''}${Math.round(v*100)}bp`,
@@ -674,11 +680,11 @@ const FRED_DISPLAY = {
   BAMLH0A0HYM2:   v => `~${Math.round(v*100)}bp`,
   BAMLC0A0CM:     v => `~${Math.round(v*100)}bp`,
   HY_IG_SPREAD_BP:v => `~${Math.round(v)}bp`,
-  M2SL:           v => `~$${(v/1000).toFixed(1)}T`,
+  M2SL:           v => `~${fmtBillions(v)}`,
   DRCRELEXFACBS:  v => `${v.toFixed(2)}%`,
-  CREACBM027NBOG: v => `$${(v/1000).toFixed(2)}T`,
-  WRESBAL:        v => `~$${(v/1000).toFixed(2)}T`,
-  RRPONTSYD:      v => `~$${(v/1000).toFixed(2)}T`,
+  CREACBM027NBOG: v => fmtBillions(v),
+  WRESBAL:        v => `~${fmtBillions(v/1000)}`, // FRED reports WRESBAL in millions, not billions
+  RRPONTSYD:      v => `~${fmtBillions(v)}`,
   MORTGAGE30US:   v => `${v.toFixed(2)}%`,
   HOUST:          v => `${(v/1000).toFixed(2)}M SAAR`,
   CSUSHPINSA:     v => `${v.toFixed(1)} (NSA)`
