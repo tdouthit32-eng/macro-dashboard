@@ -1,0 +1,703 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Macroeconomic Operating System</title>
+<style>
+:root{
+  --bg:#0b0e13;
+  --panel:#10141b;
+  --panel-2:#161c26;
+  --panel-3:#1b2230;
+  --line:#2a3240;
+  --line-soft:#1d2430;
+  --ink:#f3f5f8;
+  --ink-dim:#aab2c2;
+  --ink-faint:#7b8496;
+  --accent:#5ee0c0;
+  --green:#5ee08a;
+  --amber:#f5c463;
+  --red:#f4818f;
+  --blue:#76b6ee;
+  --violet:#b69cf0;
+  --mono:ui-monospace, 'SF Mono', 'Cascadia Code', Menlo, Consolas, monospace;
+  --sans:-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  --disp:var(--sans);
+}
+*{box-sizing:border-box; margin:0; padding:0;}
+html{background-color:#0b0e13 !important; min-height:100%; color-scheme:dark; scroll-behavior:smooth;}
+body{
+  background-color:#0b0e13 !important; color:var(--ink); font-family:var(--sans);
+  line-height:1.5; padding-bottom:80px; min-height:100vh; color-scheme:dark;
+}
+main{background-color:#0b0e13;}
+::selection{background:var(--accent); color:#04130f;}
+
+/* ---------- Header ---------- */
+header{
+  border-bottom:1px solid var(--line); padding:24px 32px 18px;
+  position:sticky; top:0; z-index:50; background:var(--bg);
+}
+.header-row{display:flex; justify-content:space-between; align-items:flex-end; flex-wrap:wrap; gap:14px; max-width:1320px; margin:0 auto;}
+.eyebrow{font-family:var(--mono); font-size:11px; letter-spacing:.14em; color:var(--accent); text-transform:uppercase; margin-bottom:6px;}
+h1{font-family:var(--disp); font-weight:700; font-size:26px; letter-spacing:-.01em;}
+.timestamp{font-family:var(--mono); font-size:12px; color:var(--ink-dim); text-align:right;}
+.timestamp .as-of{color:var(--ink);}
+nav{display:flex; gap:4px; max-width:1320px; margin:16px auto 0; overflow-x:auto; padding-bottom:2px;}
+nav a{
+  font-family:var(--mono); font-size:11px; letter-spacing:.03em; color:var(--ink-dim);
+  text-decoration:none; padding:7px 12px; border-radius:6px; white-space:nowrap;
+  border:1px solid transparent; transition:.15s;
+}
+nav a:hover{color:var(--ink); border-color:var(--line);}
+nav a.pillar-link{color:var(--accent);}
+
+/* ---------- Layout ---------- */
+main{max-width:1320px; margin:0 auto; padding:0 32px;}
+section{padding:40px 0 8px; scroll-margin-top:160px;}
+@media(max-width:880px){section{scroll-margin-top:200px;}}
+.sec-head{display:flex; align-items:baseline; gap:14px; margin-bottom:8px;}
+.sec-num{font-family:var(--mono); color:var(--accent); font-size:13px;}
+h2{font-family:var(--disp); font-weight:600; font-size:21px; color:var(--ink);}
+.sec-sub{font-family:var(--sans); font-size:13px; color:var(--ink-dim); margin:6px 0 22px; max-width:680px;}
+
+/* ---------- Pillar divider ---------- */
+.pillar{padding:34px 0 6px; scroll-margin-top:160px; border-top:2px solid var(--line);}
+.pillar:first-of-type{border-top:none;}
+.pillar-head{display:flex; align-items:center; gap:16px; margin-bottom:6px;}
+.pillar-tag{font-family:var(--mono); font-size:11px; letter-spacing:.12em; text-transform:uppercase; padding:4px 10px; border-radius:5px; border:1px solid currentColor;}
+.pillar-head h2{font-family:var(--disp); font-size:24px; font-weight:700;}
+.pillar-desc{font-size:13.5px; color:var(--ink-dim); max-width:720px; margin-bottom:8px;}
+
+/* ---------- Exec summary ---------- */
+.exec-grid{display:grid; grid-template-columns:1.25fr 1fr; gap:28px; align-items:start; margin-bottom:8px;}
+@media(max-width:980px){.exec-grid{grid-template-columns:1fr;}}
+.exec-text{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:24px 26px;}
+.exec-text p{font-size:15px; color:#e4e7ee; margin-bottom:14px;}
+.exec-text p:last-child{margin-bottom:0;}
+.exec-text strong{color:#ffffff; font-weight:600;}
+
+/* ---------- Regime card ---------- */
+.regime-card{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:20px;}
+.regime-head{display:flex; justify-content:space-between; align-items:center; gap:10px; margin-bottom:16px;}
+.regime-title{font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--ink-dim);}
+.regime-toggle{
+  font-family:var(--mono); font-size:9.5px; letter-spacing:.06em; text-transform:uppercase;
+  color:var(--ink-dim); background:var(--panel-2); border:1px solid var(--line);
+  border-radius:5px; padding:4px 8px; cursor:pointer; transition:.15s; white-space:nowrap;
+}
+.regime-toggle:hover{color:var(--ink); border-color:var(--ink-faint);}
+.regime-list{display:flex; flex-direction:column; gap:13px;}
+.regime-item{display:flex; flex-direction:column;}
+.regime-row{display:flex; align-items:center; gap:12px;}
+.dot{width:10px; height:10px; border-radius:50%; flex-shrink:0; box-shadow:0 0 10px currentColor;}
+.dot.g{background:var(--green); color:var(--green);}
+.dot.a{background:var(--amber); color:var(--amber);}
+.dot.r{background:var(--red); color:var(--red);}
+.dot.b{background:var(--blue); color:var(--blue);}
+.regime-label{font-size:13px; color:var(--ink); flex:1;}
+.regime-state{font-family:var(--mono); font-size:11.5px; font-weight:500; text-align:right;}
+.regime-state.g{color:var(--green);} .regime-state.a{color:var(--amber);} .regime-state.r{color:var(--red);} .regime-state.b{color:var(--blue);}
+.regime-rule{
+  display:none; font-family:var(--mono); font-size:10.5px; line-height:1.55;
+  color:var(--ink-dim); margin:7px 0 1px 22px; padding-left:11px; border-left:2px solid var(--line);
+}
+.regime-rule .rule-input{color:var(--ink);}
+.regime-rule .rule-thresh{color:var(--ink-faint); display:block; margin-top:2px;}
+.regime-card.show-logic .regime-rule{display:block;}
+
+/* ---------- Scorecard ---------- */
+.scorecard{border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--panel); margin-top:6px;}
+.sc-head-row{
+  display:grid; grid-template-columns:1.5fr 1fr 1.1fr 2.4fr; gap:14px; padding:11px 18px;
+  font-family:var(--mono); font-size:10px; letter-spacing:.07em; text-transform:uppercase; color:var(--ink-faint);
+  background:var(--panel-2); border-bottom:1px solid var(--line);
+}
+.sc-row{
+  display:grid; grid-template-columns:1.5fr 1fr 1.1fr 2.4fr; gap:14px; padding:12px 18px;
+  align-items:center; border-bottom:1px solid var(--line-soft); transition:.12s;
+}
+.sc-row:last-child{border-bottom:none;}
+.sc-row:hover{background:var(--panel-2);}
+.sc-domain{font-size:13px; color:var(--ink); font-weight:500; display:flex; align-items:center; gap:9px;}
+.sc-reading{font-family:var(--mono); font-size:12.5px; color:var(--ink);}
+.sc-signal{font-family:var(--mono); font-size:11px; font-weight:600;}
+.sc-signal.g{color:var(--green);} .sc-signal.a{color:var(--amber);} .sc-signal.r{color:var(--red);} .sc-signal.b{color:var(--blue);}
+.sc-implication{font-size:12px; color:var(--ink-dim); line-height:1.45;}
+@media(max-width:820px){
+  .sc-head-row{display:none;}
+  .sc-row{grid-template-columns:1fr; gap:5px; padding:14px 16px;}
+  .sc-domain{font-weight:600;}
+}
+
+/* ---------- Indicator table ---------- */
+.table-wrap{border:1px solid var(--line); border-radius:10px; overflow:hidden; background:var(--panel); margin-bottom:6px;}
+.t-row{
+  display:grid; grid-template-columns:1.6fr 1fr 1fr 2.6fr; gap:16px; align-items:center;
+  padding:12px 18px; border-bottom:1px solid var(--line-soft); transition:.12s;
+}
+.t-row:last-child{border-bottom:none;}
+.t-row:hover{background:var(--panel-2);}
+.t-row.head{
+  font-family:var(--mono); font-size:10.5px; letter-spacing:.08em; text-transform:uppercase; color:var(--ink-faint);
+  background:var(--panel-2); padding-top:10px; padding-bottom:10px;
+}
+.t-name{font-size:13.5px; color:var(--ink); font-weight:500;}
+.t-value{font-family:var(--mono); font-size:13px; color:var(--ink);}
+.t-change{font-family:var(--mono); font-size:12px;}
+.t-change.up{color:var(--green);} .t-change.down{color:var(--red);} .t-change.flat{color:var(--ink-dim);}
+.t-why{font-size:12.5px; color:var(--ink-dim); line-height:1.45;}
+@media(max-width:760px){
+  .t-row{grid-template-columns:1fr; gap:4px;}
+  .t-row.head{display:none;}
+  .t-name{font-weight:600;}
+}
+
+/* status pill */
+.pill{display:inline-block; font-family:var(--mono); font-size:10px; padding:2px 8px; border-radius:20px; letter-spacing:.04em; text-transform:uppercase; border:1px solid currentColor;}
+.pill.g{color:var(--green);} .pill.a{color:var(--amber);} .pill.r{color:var(--red);} .pill.b{color:var(--blue);} .pill.v{color:var(--violet);}
+
+/* note row */
+.note-row{
+  padding:12px 18px; font-size:12px; color:var(--ink-faint); font-style:italic; border-top:1px dashed var(--line); background:var(--panel-2);
+}
+.note-row a{color:var(--blue); text-decoration:none;}
+.note-row a:hover{text-decoration:underline;}
+
+/* collapsible */
+.collapse-head{
+  display:flex; align-items:center; justify-content:space-between; gap:12px; cursor:pointer;
+  user-select:none; padding:2px 0;
+}
+.collapse-head .chev{font-family:var(--mono); font-size:13px; color:var(--ink-faint); transition:transform .2s;}
+.collapsed .chev{transform:rotate(-90deg);}
+.collapse-body{overflow:hidden; transition:max-height .3s ease; max-height:6000px;}
+.collapsed .collapse-body{max-height:0;}
+
+/* verification legend */
+.legend{display:flex; flex-wrap:wrap; gap:14px; margin:10px 0 4px; font-family:var(--mono); font-size:10.5px; color:var(--ink-faint);}
+.legend span{display:flex; align-items:center; gap:6px;}
+.vbadge{font-family:var(--mono); font-size:8.5px; letter-spacing:.05em; padding:1px 6px; border-radius:4px; text-transform:uppercase; border:1px solid currentColor; margin-left:7px; vertical-align:middle;}
+.vbadge.live{color:var(--green);}
+.vbadge.est{color:var(--amber);}
+.vbadge.man{color:var(--ink-faint);}
+
+/* watch list */
+.watch-grid{display:grid; grid-template-columns:repeat(3,1fr); gap:16px; margin-top:6px;}
+@media(max-width:980px){.watch-grid{grid-template-columns:repeat(2,1fr);}}
+@media(max-width:680px){.watch-grid{grid-template-columns:1fr;}}
+.watch-card{background:var(--panel); border:1px solid var(--line); border-radius:10px; padding:17px 19px;}
+.watch-card .tag{font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; margin-bottom:8px; display:inline-block;}
+.watch-card h3{font-family:var(--disp); font-size:14.5px; font-weight:600; margin-bottom:8px;}
+.watch-card p{font-size:12.5px; color:var(--ink-dim);}
+
+/* chips */
+.chip-row{display:flex; flex-wrap:wrap; gap:8px; margin-top:18px;}
+.chip{font-family:var(--mono); font-size:11px; padding:6px 11px; border-radius:6px; background:var(--panel-2); border:1px solid var(--line); color:var(--ink-dim);}
+
+footer{max-width:1320px; margin:0 auto; padding:34px 32px 10px; font-size:11.5px; color:var(--ink-faint); font-family:var(--mono); line-height:1.7; border-top:2px solid var(--line); margin-top:30px;}
+footer a{color:var(--ink-dim);}
+</style>
+</head>
+<body style="background:#0b0e13; color:#f3f5f8;">
+
+<header>
+  <div class="header-row">
+    <div>
+      <div class="eyebrow">Macroeconomic Operating System &middot; Daily Briefing</div>
+      <h1>Where the economy was, is, and may be heading</h1>
+    </div>
+    <div class="timestamp">
+      Snapshot built <span class="as-of">Fri Jul 3, 2026</span><br>
+      Levels reflect Jun 30&ndash;Jul 3 data
+    </div>
+  </div>
+  <nav>
+    <a href="#summary">Summary</a>
+    <a href="#scorecard">Scorecard</a>
+    <a href="#pillar-rates" class="pillar-link">I &middot; Rates &amp; Liquidity</a>
+    <a href="#pillar-credit" class="pillar-link">II &middot; Credit &amp; Banking</a>
+    <a href="#pillar-growth" class="pillar-link">III &middot; Growth &amp; Labor</a>
+    <a href="#pillar-global" class="pillar-link">IV &middot; Global &amp; Fiscal</a>
+    <a href="#watch">Watch</a>
+  </nav>
+</header>
+
+<main>
+
+  <!-- ============ EXEC SUMMARY ============ -->
+  <section id="summary">
+    <div class="sec-head"><span class="sec-num">01</span><h2>Executive Summary</h2></div>
+    <div class="exec-grid">
+      <div class="exec-text">
+        <p>The story shifted this week. After a hawkish June FOMC &mdash; Chair <strong>Kevin Warsh&rsquo;s first meeting (Jun 17)</strong>, which held at <strong>3.50%&ndash;3.75%</strong> and produced a dot plot with nine of eighteen officials seeing another hike &mdash; the <strong>June jobs report (Jul 2) undercut the hawkish case</strong>. Payrolls rose just <strong>+57k</strong> (vs ~115k expected), and April&ndash;May were revised down a combined <strong>74k</strong>, dragging the 3-month average to only <strong>~78k</strong>. Odds of a September hike fell to roughly <strong>50%</strong> from ~64% the day before.</p>
+        <p>The soft print reframes the core tension rather than resolving it. Unemployment actually <em>fell</em> to <strong>4.2%</strong> &mdash; but for the wrong reason: participation dropped to <strong>61.5%</strong> (lowest since 2021) as people left the labor force, and the household survey showed 507k fewer employed. This is the <strong>hard data finally bending toward the weak soft data</strong> (sentiment, LEI) the dashboard has flagged for weeks. Meanwhile the ACM 10-year term premium remains positive (~<strong>0.7%</strong>), so the long end still demands duration/fiscal compensation even as front-end hike bets unwind &mdash; the 10Y eased only modestly to <strong>~4.49%</strong>.</p>
+        <p>Liquidity stays the quiet swing factor: M2 is growing again (<strong>~$22.8T, +1.9% 3-mo</strong>), bank credit is expanding, and reserves remain ample &mdash; part of why credit spreads sit near record tights (<strong>HY OAS ~263bp</strong>) even now. Equities are near highs (<strong>S&amp;P ~7,483</strong>) with VIX subdued (<strong>~15.8</strong>). The gap between easy financial conditions and the Fed&rsquo;s restrictive stance &mdash; now with a cooling labor market pulling one way and a sticky term premium the other &mdash; is the central thing this dashboard monitors.</p>
+      </div>
+      <div class="regime-card" id="regimeCard">
+        <div class="regime-head">
+          <span class="regime-title">Top-Level Regime Read</span>
+          <button class="regime-toggle" id="regimeToggle" type="button">Show grading logic</button>
+        </div>
+        <div class="regime-list" id="regimeList"></div>
+        <div class="chip-row" id="regimeChips"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ============ SCORECARD ============ -->
+  <section id="scorecard">
+    <div class="sec-head"><span class="sec-num">02</span><h2>Full Signal Scorecard</h2></div>
+    <div class="sec-sub">The detailed read across all twelve analytical domains. Each maps a verified indicator to a directional signal and a one-line implication for where the economy is heading. The six top-level dimensions above are a weighted distillation of these.</div>
+    <div class="legend">
+      <span><span class="vbadge live">Live</span> verified from public source</span>
+      <span><span class="vbadge est">Est.</span> approximate / lagging</span>
+      <span><span class="vbadge man">Manual</span> plug in from terminal</span>
+    </div>
+    <div class="scorecard" id="scorecardTable">
+      <div class="sc-head-row"><div>Domain</div><div>Key Reading</div><div>Signal</div><div>Implication</div></div>
+      <!-- rows injected by JS -->
+    </div>
+  </section>
+
+  <!-- =================================================================
+       PILLAR I — RATES & LIQUIDITY
+       ================================================================= -->
+  <div class="pillar" id="pillar-rates">
+    <div class="pillar-head">
+      <span class="pillar-tag" style="color:var(--blue)">Pillar I</span>
+      <h2>Rates &amp; Liquidity</h2>
+    </div>
+    <p class="pillar-desc">The plumbing: what money costs, how the curve is pricing growth and inflation, how much duration risk the market is demanding, and how much liquidity the banking system is running on. This is the transmission belt from Fed policy to everything downstream.</p>
+
+    <!-- Monetary Policy -->
+    <section id="policy">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">2.1</span><h2>Monetary Policy &amp; Repo</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">Fed Funds Target <span class="vbadge live">Live</span></div><div class="t-value">3.50%&ndash;3.75%</div><div><span class="pill r">Hawkish hold</span></div><div class="t-why">Held 4th straight meeting (Jun 17); dot plot revised up to 3.6&ndash;4.1% YE median under new Chair Warsh.</div></div>
+        <div class="t-row"><div class="t-name">SOFR <span class="vbadge live">Live</span></div><div class="t-value">3.62%</div><div><span class="pill b">Stable</span></div><div class="t-why">Secured overnight benchmark; no funding stress vs the IORB/RRP corridor.</div></div>
+        <div class="t-row"><div class="t-name">Standing Repo / ON RRP <span class="vbadge live">Live</span></div><div class="t-value">3.75% / 3.50%</div><div><span class="pill b">Corridor intact</span></div><div class="t-why">Ceiling and floor of the operating framework; RRP per-counterparty cap raised to $160B/day.</div></div>
+        <div class="t-row"><div class="t-name">Market-Implied Path <span class="vbadge est">Est.</span></div><div class="t-value">~50% Sep hike</div><div><span class="pill a">Hike odds fading</span></div><div class="t-why">Soft June jobs (Jul 2) cut September-hike odds to ~50% from ~64%; Warsh noted eased inflation expectations. Next FOMC end of July.</div></div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Yield Curve Analytics -->
+    <section id="curve">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">2.2</span><h2>Yield Curve Analytics</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">The curve has de-inverted and re-steepened &mdash; but the steepening is being driven by a rising <em>term premium</em>, not by rate-cut expectations. That distinction is the single most important rates story of 2026.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">10Y / 2Y Yields <span class="vbadge live">Live</span></div><div class="t-value">4.49% / 4.14%</div><div><span class="pill b">2Y easing</span></div><div class="t-why">Front end fell on softer jobs data (2Y off ~3.5bp); 10Y held near 4.49% as the term premium keeps the long end firm.</div></div>
+        <div class="t-row"><div class="t-name">2s10s Spread <span class="vbadge live">Live</span></div><div class="t-value">~+35bp</div><div><span class="pill g">Steepening</span></div><div class="t-why">Positive and steepening from inversion; a late-cycle / early-recovery shape rather than a current recession flag. Bull-steepening slightly as the front end leads.</div></div>
+        <div class="t-row"><div class="t-name">3M10Y Spread <span class="vbadge est">Est.</span></div><div class="t-value">~+58bp</div><div><span class="pill g">Positive</span></div><div class="t-why">The Fed&rsquo;s preferred recession-probability input; positive reading argues against imminent recession.</div></div>
+        <div class="t-row"><div class="t-name">ACM 10Y Term Premium <span class="vbadge live">Live</span></div><div class="t-value">~+0.70%</div><div><span class="pill a">Positive, ~35th pctile</span></div><div class="t-why">Positive for the first time since 2023 (NY Fed ACM model). The long end demands duration compensation again &mdash; supply &amp; fiscal driven. Mean-reversion toward the ~1.4% historical median implies further upward pressure on the 10Y.</div></div>
+        <div class="t-row"><div class="t-name">Curve Decomposition <span class="vbadge est">Est.</span></div><div class="t-value">Path vs premium</div><div><span class="pill a">Premium-led</span></div><div class="t-why">ACM splits the 10Y into expected-path (~3.7%) + term premium (~0.7%). The market broadly believes the Fed; it&rsquo;s the duration premium, not rate expectations, repricing the long end.</div></div>
+        <div class="note-row">Live: <a href="https://www.newyorkfed.org/research/data_indicators/term-premia-tabs" target="_blank">NY Fed ACM term premia</a> &middot; <a href="https://fred.stlouisfed.org/series/T10Y2Y" target="_blank">FRED 2s10s</a> &middot; <a href="https://fred.stlouisfed.org/series/T10Y3M" target="_blank">FRED 3M10Y</a></div>
+      </div>
+      </div>
+    </section>
+
+    <!-- TIPS & Breakevens -->
+    <section id="tips">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">2.3</span><h2>TIPS &amp; Inflation Breakevens</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">The bond market&rsquo;s own inflation forecast. The key tension: realized CPI is running 4.2%, but market breakevens remain anchored near 2.2% &mdash; the market is betting the inflation spike is supply-driven and transitory, not embedded.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">10Y Breakeven <span class="vbadge live">Live</span></div><div class="t-value">~2.21%</div><div><span class="pill g">Anchored</span></div><div class="t-why">Market-implied 10yr average inflation. Well below realized CPI &mdash; expectations remain credibly anchored despite the energy shock.</div></div>
+        <div class="t-row"><div class="t-name">5Y Breakeven <span class="vbadge est">Est.</span></div><div class="t-value">~2.4%</div><div><span class="pill a">Slightly elevated</span></div><div class="t-why">Nearer-term breakevens sit above the 10Y &mdash; a mild hump reflecting the current energy-driven price pressure.</div></div>
+        <div class="t-row"><div class="t-name">10Y Real Yield (TIPS) <span class="vbadge est">Est.</span></div><div class="t-value">~2.15%</div><div><span class="pill a">Restrictive</span></div><div class="t-why">Positive real yields above ~2% are genuinely restrictive for the real economy &mdash; a headwind to rate-sensitive investment.</div></div>
+        <div class="t-row"><div class="t-name">5y5y Forward <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">The Fed&rsquo;s favored long-run expectations gauge; a break above ~2.5% would signal de-anchoring risk.</div></div>
+        <div class="note-row">Live: <a href="https://fred.stlouisfed.org/series/T10YIE" target="_blank">FRED 10Y breakeven</a> &middot; <a href="https://fred.stlouisfed.org/series/T5YIFR" target="_blank">FRED 5y5y forward</a> &middot; <a href="https://fred.stlouisfed.org/series/DFII10" target="_blank">FRED 10Y TIPS real yield</a></div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Treasury Auctions & Dealer Positioning -->
+    <section id="auctions">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">2.4</span><h2>Treasury Auctions &amp; Dealer Positioning</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">Supply mechanics. With deficits high and the Fed in runoff, the private sector must absorb a rising share of long-dated paper &mdash; the structural force behind the rising term premium above. Auction tails and dealer takedown are the early-warning system.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">Quarterly Refunding Mix <span class="vbadge man">Manual</span></div><div class="t-value">Watch May/Aug</div><div><span class="pill a">Supply-heavy</span></div><div class="t-why">A shift toward more long-dated issuance intensifies term-premium pressure. Track the QRA coupon/bill split.</div></div>
+        <div class="t-row"><div class="t-name">Auction Bid-to-Cover <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Falling B/C ratios (esp. 10Y/30Y) signal weakening demand; a "tail" (stop above when-issued) is a red flag.</div></div>
+        <div class="t-row"><div class="t-name">Indirect Bidders (foreign) <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Declining indirect award % suggests foreign official demand is fading &mdash; ties to the TIC data in Pillar IV.</div></div>
+        <div class="t-row"><div class="t-name">Primary Dealer Positions <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Large dealer inventories can pressure spreads &amp; signal absorption stress; from the NY Fed weekly statistics.</div></div>
+        <div class="note-row">Live sources: <a href="https://www.treasurydirect.gov/auctions/results/" target="_blank">TreasuryDirect auction results</a> &middot; <a href="https://www.newyorkfed.org/markets/primarydealer_statistics" target="_blank">NY Fed primary dealer statistics</a> &middot; <a href="https://home.treasury.gov/policy-issues/financing-the-government/quarterly-refunding" target="_blank">Treasury QRA</a></div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Bank Reserves & Fed Liquidity -->
+    <section id="liquidity">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">2.5</span><h2>Bank Reserves &amp; Fed Liquidity</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">The true measure of system liquidity &mdash; more important than the policy rate for asset prices. Net liquidity (Fed balance sheet &minus; TGA &minus; RRP) is the quantity that actually reaches markets.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">Bank Reserves <span class="vbadge est">Est.</span></div><div class="t-value">Ample</div><div><span class="pill g">Above scarcity</span></div><div class="t-why">Reserves remain well above the "lowest comfortable" level; the Fed reaffirmed "ample reserves" framework in June.</div></div>
+        <div class="t-row"><div class="t-name">Fed Balance Sheet (H.4.1) <span class="vbadge est">Est.</span></div><div class="t-value">Bills-only reinvest</div><div><span class="pill a">Gradual drain</span></div><div class="t-why">Maturing Treasuries &amp; MBS paydowns rolled into bills &mdash; a slow, passive liquidity drain, not active QT.</div></div>
+        <div class="t-row"><div class="t-name">ON RRP Balances <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">A drained RRP (near zero) means the liquidity buffer is gone &mdash; further QT would then hit reserves directly.</div></div>
+        <div class="t-row"><div class="t-name">Net Liquidity <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill a">Watch TGA</span></div><div class="t-why">Balance sheet &minus; TGA &minus; RRP. Treasury rebuilding the TGA after debt-ceiling resolution drains liquidity; a key swing factor.</div></div>
+        <div class="note-row">Live: <a href="https://www.federalreserve.gov/releases/h41/current/" target="_blank">Fed H.4.1 balance sheet</a> &middot; <a href="https://fred.stlouisfed.org/series/WRESBAL" target="_blank">FRED reserve balances</a> &middot; <a href="https://fred.stlouisfed.org/series/RRPONTSYD" target="_blank">FRED ON RRP</a></div>
+      </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================================================================
+       PILLAR II — CREDIT & BANKING
+       ================================================================= -->
+  <div class="pillar" id="pillar-credit">
+    <div class="pillar-head">
+      <span class="pillar-tag" style="color:var(--amber)">Pillar II</span>
+      <h2>Credit &amp; Banking</h2>
+    </div>
+    <p class="pillar-desc">Where credit is created and where it breaks. Spreads, money supply, bank lending, and the regional-bank/CRE nexus that has been the system&rsquo;s soft spot since 2023. Credit leads the real economy by months &mdash; this pillar is the leading edge.</p>
+
+    <!-- Credit Markets -->
+    <section id="credit">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">3.1</span><h2>Credit Markets</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">Spreads near multi-year tights even as policy turned less friendly &mdash; the gap between credit pricing and macro risk is the watch item.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">IG Corporate OAS <span class="vbadge live">Live</span></div><div class="t-value">~80bp</div><div><span class="pill a">7th pctile (tight)</span></div><div class="t-why">Cheap IG funding, but little cushion for bad news.</div></div>
+        <div class="t-row"><div class="t-name">High Yield OAS <span class="vbadge live">Live</span></div><div class="t-value">~263bp</div><div><span class="pill a">Bottom decile</span></div><div class="t-why">Junk risk premium; tightened further (2.63% in June) &mdash; no credit concern despite the soft jobs print. A sustained move above ~350&ndash;400bp would flag stress.</div></div>
+        <div class="t-row"><div class="t-name">CCC &amp; Below <span class="vbadge est">Est.</span></div><div class="t-value">~900&ndash;925bp</div><div><span class="pill b">Wide, tightening</span></div><div class="t-why">A 2020&ndash;22 refinancing wall approaches for the weakest issuers &mdash; the real default-risk concentration.</div></div>
+        <div class="t-row"><div class="t-name">HY&ndash;IG Quality Spread <span class="vbadge est">Est.</span></div><div class="t-value">~200bp</div><div><span class="pill a">Narrow</span></div><div class="t-why">Little extra premium demanded for weak credit &mdash; classic late-cycle complacency.</div></div>
+        <div class="note-row">Live: <a href="https://fred.stlouisfed.org/series/BAMLH0A0HYM2" target="_blank">FRED HY OAS</a> &middot; <a href="https://fred.stlouisfed.org/series/BAMLC0A0CM" target="_blank">FRED IG OAS</a> &middot; CDX/iTraxx via terminal.</div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Money Supply & Credit Creation -->
+    <section id="money">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">3.2</span><h2>Money Supply &amp; Credit Creation</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">The framework&rsquo;s core chain &mdash; <em>loans create deposits, deposits are money</em>. After contracting in 2023&ndash;24, M2 and bank credit are expanding again, an under-appreciated liquidity tailwind feeding the tight-spread, risk-on backdrop.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">M2 Money Supply <span class="vbadge live">Live</span></div><div class="t-value">~$22.8T</div><div><span class="pill a">+1.9% 3-mo</span></div><div class="t-why">Growing again after the 2023&ndash;24 contraction; near historically average pace. Money growth is reflating the system.</div></div>
+        <div class="t-row"><div class="t-name">Bank Credit (H.8) <span class="vbadge est">Est.</span></div><div class="t-value">Expanding</div><div><span class="pill g">Loan growth +</span></div><div class="t-why">Commercial bank loans &amp; leases growing again per the weekly H.8 &mdash; credit creation is positive, supporting activity.</div></div>
+        <div class="t-row"><div class="t-name">C&amp;I Loans <span class="vbadge man">Manual</span></div><div class="t-value">See H.8</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Commercial &amp; industrial lending is the most cyclical credit category &mdash; a real-time read on business demand.</div></div>
+        <div class="t-row"><div class="t-name">SLOOS Lending Standards <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">The Senior Loan Officer survey leads credit availability by a quarter; net tightening % is the key series.</div></div>
+        <div class="note-row">Live: <a href="https://fred.stlouisfed.org/series/M2SL" target="_blank">FRED M2</a> &middot; <a href="https://www.federalreserve.gov/releases/h8/current/" target="_blank">Fed H.8 bank credit</a> &middot; <a href="https://www.federalreserve.gov/data/sloos.htm" target="_blank">SLOOS survey</a></div>
+      </div>
+      </div>
+    </section>
+
+    <!-- CRE & Regional Banks -->
+    <section id="cre">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">3.3</span><h2>Commercial Real Estate &amp; Regional Banks</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">The system&rsquo;s known fault line since SVB (2023). Regional banks hold the bulk of CRE exposure; office maturities meeting higher-for-longer rates is the slow-motion risk this pillar tracks most closely.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">Regional Bank Index (KRE) <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Relative performance vs the S&amp;P is a real-time market verdict on regional-bank health &amp; CRE stress.</div></div>
+        <div class="t-row"><div class="t-name">CRE Price Index <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Office in particular; valuations meeting a refinancing wall at higher rates drives the regional-bank loss path.</div></div>
+        <div class="t-row"><div class="t-name">CRE Loan Delinquencies <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Rising delinquency/charge-off rates (esp. office) are the realized-loss signal; from the Fed&rsquo;s quarterly data.</div></div>
+        <div class="t-row"><div class="t-name">Bank Term Funding / Discount Window <span class="vbadge man">Manual</span></div><div class="t-value">See H.4.1</div><div><span class="pill b">&mdash;</span></div><div class="t-why">A spike in emergency facility usage is the canary for acute bank funding stress.</div></div>
+        <div class="note-row">Live sources: <a href="https://fred.stlouisfed.org/series/CREACBM027NBOG" target="_blank">FRED CRE loans</a> &middot; <a href="https://fred.stlouisfed.org/series/DRCRELEXFACBS" target="_blank">FRED CRE delinquency rate</a> &middot; KRE/regional indices via terminal.</div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Municipal Credit -->
+    <section id="muni">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">3.4</span><h2>Municipal Credit Fundamentals</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">Beyond muni/Treasury ratios &mdash; the underlying creditworthiness of state &amp; local issuers: reserves, pension funding, and revenue trends, plus rating-agency actions.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">AAA Muni/Treasury Ratio (10Y) <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Above ~85&ndash;90% signals munis are cheap vs Treasuries on a relative-value basis.</div></div>
+        <div class="t-row"><div class="t-name">State Rainy-Day Funds <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Aggregate reserves near record highs = strong GO credit; a buffer against revenue softness.</div></div>
+        <div class="t-row"><div class="t-name">Pension Funded Ratios <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">The structural long-term muni credit risk; underfunded states face budget pressure regardless of the cycle.</div></div>
+        <div class="t-row"><div class="t-name">Muni Rating Actions / Flows <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Net upgrades vs downgrades + fund flows; watch energy-exposed and pension-stressed states.</div></div>
+        <div class="note-row">Live sources: <a href="https://www.ici.org/research/stats" target="_blank">ICI muni fund flows</a> &middot; MMD/Refinitiv muni curve &middot; Moody&rsquo;s/S&amp;P state rating reports via terminal.</div>
+      </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================================================================
+       PILLAR III — GROWTH & LABOR
+       ================================================================= -->
+  <div class="pillar" id="pillar-growth">
+    <div class="pillar-head">
+      <span class="pillar-tag" style="color:var(--green)">Pillar III</span>
+      <h2>Growth &amp; Labor</h2>
+    </div>
+    <p class="pillar-desc">The real economy &mdash; output, jobs, housing, and the leading indicators that turn before the cycle does. The central puzzle here: firm hard data (payrolls, ISM) sitting next to soft data at multi-year lows (sentiment, LEI). One of them is wrong.</p>
+
+    <!-- Economic Data & LEI -->
+    <section id="econ">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">4.1</span><h2>Activity, Inflation &amp; Leading Indicators</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">CPI (y/y, May) <span class="vbadge live">Live</span></div><div class="t-value">4.2% / Core 2.9%</div><div><span class="pill r">Elevated</span></div><div class="t-why">Largest 12-mo increase since Apr 2023; &gt;60% of the May gain was energy.</div></div>
+        <div class="t-row"><div class="t-name">PCE (Fed YE proj.) <span class="vbadge live">Live</span></div><div class="t-value">3.6%</div><div><span class="pill r">Revised up sharply</span></div><div class="t-why">Up from 2.7% in March &mdash; the biggest driver of the hawkish dot-plot shift.</div></div>
+        <div class="t-row"><div class="t-name">GDP Growth (Fed 2026) <span class="vbadge live">Live</span></div><div class="t-value">2.2%</div><div><span class="pill a">Revised down</span></div><div class="t-why">Down from 2.4% &mdash; modest downgrade, not a growth scare.</div></div>
+        <div class="t-row"><div class="t-name">ISM Mfg / Services <span class="vbadge live">Live</span></div><div class="t-value">54.0 / 54.5</div><div><span class="pill g">Expansion</span></div><div class="t-why">Both at/near multi-year highs; price sub-indices elevated on fuel &amp; freight.</div></div>
+        <div class="t-row"><div class="t-name">Conference Board LEI <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill a">Soft</span></div><div class="t-why">The 10-component leading index has been weak/negative &mdash; the clearest "soft data" warning vs firm hard data.</div></div>
+        <div class="t-row"><div class="t-name">June Payrolls <span class="vbadge live">Live</span></div><div class="t-value">+57k</div><div><span class="pill r">Sharp miss</span></div><div class="t-why">Well below ~115k consensus; Apr&ndash;May revised down 74k combined. Leisure/hospitality &minus;61k. The soft data is starting to win.</div></div>
+        <div class="t-row"><div class="t-name">Consumer Sentiment (UMich) <span class="vbadge live">Live</span></div><div class="t-value">Lowest since Jun 2022</div><div><span class="pill r">Deteriorating</span></div><div class="t-why">The sharpest hard/soft divergence; June payrolls suggest hard data is now bending toward it, as history warns.</div></div>
+        <div class="note-row">Next: June CPI Jul 14 &middot; July jobs Aug 7 &middot; <a href="https://www.conference-board.org/topics/us-leading-indicators" target="_blank">Conference Board LEI</a> &middot; Source: BLS (Jul 2), Fed SEP (Jun 17).</div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Labor Market Internals -->
+    <section id="labor">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">4.2</span><h2>Labor Market Internals</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">Beneath the headline 4.3% unemployment rate &mdash; the internals that turn first. Hiring breadth, quits, temp help, and the real-wage squeeze tell a more nuanced story than the strong top-line.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">Payrolls (3-mo avg) <span class="vbadge live">Live</span></div><div class="t-value">~+78k/mo</div><div><span class="pill a">Cooling sharply</span></div><div class="t-why">Collapsed from ~188k after the +57k June print and 74k of downward revisions &mdash; now roughly at the 12-mo trend (~36k). The reacceleration narrative is over.</div></div>
+        <div class="t-row"><div class="t-name">Unemployment / Participation <span class="vbadge live">Live</span></div><div class="t-value">4.2% / 61.5%</div><div><span class="pill a">Falling for wrong reason</span></div><div class="t-why">Rate dipped to 4.2%, but driven by a 0.3pt participation drop (lowest since 2021) &mdash; 507k fewer employed in the household survey, not genuine strength.</div></div>
+        <div class="t-row"><div class="t-name">Real Wage Growth <span class="vbadge live">Live</span></div><div class="t-value">AHE +3.5% vs CPI 4.2%</div><div><span class="pill a">Negative real</span></div><div class="t-why">Wages still lag inflation &mdash; Fed reads it as reduced wage-price-spiral risk; consumers feel a squeeze.</div></div>
+        <div class="t-row"><div class="t-name">Quits / JOLTS / Temp Help <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Falling quits &amp; temp-help payrolls lead broader softening &mdash; the early-warning internals.</div></div>
+        <div class="t-row"><div class="t-name">Sectoral Breadth (AI impact) <span class="vbadge est">Est.</span></div><div class="t-value">Narrowing</div><div><span class="pill a">Watch</span></div><div class="t-why">Gains concentrated in health/leisure/government; financial activities &amp; some professional services shedding jobs, partly AI-driven.</div></div>
+        <div class="note-row">Live: <a href="https://www.bls.gov/ces/" target="_blank">BLS payrolls</a> &middot; <a href="https://www.bls.gov/jlt/" target="_blank">JOLTS</a> &middot; Employment Situation for June out Jul 2.</div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Housing -->
+    <section id="housing">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">4.3</span><h2>Housing Market</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">The most rate-sensitive sector and a major CPI driver via shelter. The lock-in effect &mdash; homeowners unwilling to give up low pandemic-era mortgages &mdash; continues to freeze supply against higher-for-longer rates.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">30Y Mortgage Rate <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Tracks the 10Y + a spread; the binding affordability constraint and the lock-in mechanism.</div></div>
+        <div class="t-row"><div class="t-name">Housing Starts / Permits <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Permits lead starts; a forward read on residential investment &amp; construction employment.</div></div>
+        <div class="t-row"><div class="t-name">Existing Home Sales <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Frozen by lock-in; low turnover keeps shelter CPI sticky and weighs on related consumption.</div></div>
+        <div class="t-row"><div class="t-name">Case-Shiller / NAHB <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Price index + builder sentiment; shelter is ~1/3 of CPI, so housing turns feed directly into the inflation outlook.</div></div>
+        <div class="note-row">Live: <a href="https://fred.stlouisfed.org/series/MORTGAGE30US" target="_blank">FRED 30Y mortgage</a> &middot; <a href="https://fred.stlouisfed.org/series/HOUST" target="_blank">FRED housing starts</a> &middot; <a href="https://fred.stlouisfed.org/series/CSUSHPINSA" target="_blank">Case-Shiller</a></div>
+      </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- =================================================================
+       PILLAR IV — GLOBAL & FISCAL
+       ================================================================= -->
+  <div class="pillar" id="pillar-global">
+    <div class="pillar-head">
+      <span class="pillar-tag" style="color:var(--violet)">Pillar IV</span>
+      <h2>Global &amp; Fiscal</h2>
+    </div>
+    <p class="pillar-desc">The exogenous forces &mdash; other central banks, currency dynamics, sovereign debt, and the US fiscal trajectory that increasingly drives the term premium in Pillar I. This is where the long-term debt-cycle pressures show up.</p>
+
+    <!-- Global Central Banks -->
+    <section id="global-cb">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">5.1</span><h2>Global Central Bank Policy</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">Rate differentials drive the dollar, and the dollar tightens or loosens global financial conditions. The Fed&rsquo;s hawkish turn against a dovish-fiscal BoJ is the dominant cross-currents story.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Central Bank</div><div>Stance</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">Federal Reserve <span class="vbadge live">Live</span></div><div class="t-value">3.50&ndash;3.75%, hawkish</div><div><span class="pill r">Hawkish hold</span></div><div class="t-why">Pricing out cuts, dot plot up &mdash; the widening rate differential is pulling the dollar to 14&ndash;15 mo highs.</div></div>
+        <div class="t-row"><div class="t-name">ECB <span class="vbadge est">Est.</span></div><div class="t-value">Hiked on inflation</div><div><span class="pill a">Tightening</span></div><div class="t-why">Raised rates to counter accelerating prices, but soft Eurozone inflation prints limit euro strength vs USD.</div></div>
+        <div class="t-row"><div class="t-name">Bank of Japan <span class="vbadge est">Est.</span></div><div class="t-value">Fiscally dovish</div><div><span class="pill r">Yen at multi-decade low</span></div><div class="t-why">Dovish stance + a hawkish Fed = a historically weak yen; raises BoJ/MOF intervention &amp; carry-unwind risk.</div></div>
+        <div class="t-row"><div class="t-name">PBoC (China) <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">China M2 growth is running significantly below trend &mdash; a global-demand and commodity drag to watch.</div></div>
+        <div class="note-row">Live FX: <a href="https://www.investing.com/currencies/us-dollar-index" target="_blank">DXY ~101.1</a> &middot; EUR/USD ~1.14 &middot; central-bank calendars via terminal.</div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Currencies & Commodities -->
+    <section id="fx-comm">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">5.2</span><h2>Currencies &amp; Commodities</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">DXY <span class="vbadge est">Est.</span></div><div class="t-value">~101.1</div><div><span class="pill a">14&ndash;15 mo high</span></div><div class="t-why">Hawkish-Fed repricing the dominant driver; a strong dollar tightens global conditions.</div></div>
+        <div class="t-row"><div class="t-name">WTI / Brent <span class="vbadge est">Est.</span></div><div class="t-value">~$68.8 / ~$72</div><div><span class="pill g">Pre-war levels</span></div><div class="t-why">Wholesale energy back to before the Middle East conflict; the key driver of recent energy disinflation and Warsh&rsquo;s softer inflation read.</div></div>
+        <div class="t-row"><div class="t-name">Gold <span class="vbadge est">Est.</span></div><div class="t-value">~$4,187</div><div><span class="pill a">Pushing highs</span></div><div class="t-why">Firm on softer rate-hike odds and a slightly weaker dollar; safe-haven and inflation-hedge demand outweighing the real-rate headwind.</div></div>
+        <div class="t-row"><div class="t-name">Copper <span class="vbadge est">Est.</span></div><div class="t-value">~$6.18/lb</div><div><span class="pill b">Stable</span></div><div class="t-why">"Dr. Copper" steady &mdash; consistent with the resilient-growth read, not a sharp slowdown.</div></div>
+      </div>
+      </div>
+    </section>
+
+    <!-- Sovereign Debt & Fiscal -->
+    <section id="fiscal">
+      <div class="collapse-head" data-collapse><div class="sec-head"><span class="sec-num">5.3</span><h2>Sovereign Debt &amp; Fiscal Policy</h2></div><span class="chev">&#9662;</span></div>
+      <div class="collapse-body">
+      <div class="sec-sub">The long-term debt cycle in action. High deficits + Fed runoff mean the private sector absorbs more long-dated supply &mdash; the structural engine behind the rising term premium in Pillar I, and the slow-burn risk to the dollar&rsquo;s reserve role.</div>
+      <div class="table-wrap">
+        <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
+        <div class="t-row"><div class="t-name">Federal Deficit / GDP <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill a">Elevated</span></div><div class="t-why">Persistent ~6%+ deficits in an expansion are historically unusual &mdash; the supply driver of term premium.</div></div>
+        <div class="t-row"><div class="t-name">Debt / GDP <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill a">Rising</span></div><div class="t-why">The long-term debt-cycle metric; rising trajectory pressures the term premium &amp; long-run dollar.</div></div>
+        <div class="t-row"><div class="t-name">Net Interest Outlays <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill a">Surging</span></div><div class="t-why">Interest now rivals major budget lines; higher-for-longer rates compound the fiscal math.</div></div>
+        <div class="t-row"><div class="t-name">Foreign Treasury Holdings (TIC) <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Declining foreign official demand + heavy issuance is a term-premium &amp; reserve-status risk; ties to auction indirects.</div></div>
+        <div class="note-row">Live: <a href="https://fiscaldata.treasury.gov/" target="_blank">Treasury fiscal data</a> &middot; <a href="https://ticdata.treasury.gov/" target="_blank">TIC foreign holdings</a> &middot; <a href="https://www.cbo.gov/" target="_blank">CBO projections</a></div>
+      </div>
+      </div>
+    </section>
+  </div>
+
+  <!-- ============ THINGS TO WATCH ============ -->
+  <section id="watch" style="border-top:2px solid var(--line); margin-top:30px; padding-top:34px;">
+    <div class="sec-head"><span class="sec-num">06</span><h2>Things to Watch</h2></div>
+    <div class="sec-sub">Cross-pillar risks and divergences that could move the regime read in either direction.</div>
+    <div class="watch-grid">
+      <div class="watch-card"><span class="tag" style="color:var(--red)">Policy</span><h3>Fed caught between mandates</h3><p>Warsh stayed hawkish on inflation, but the soft jobs print cut Sep-hike odds to ~50%. A cooling labor market plus sticky 4%+ inflation is the classic stagflation bind &mdash; the end-July FOMC is now genuinely two-sided.</p></div>
+      <div class="watch-card"><span class="tag" style="color:var(--blue)">Rates</span><h3>Term premium mean-reversion</h3><p>ACM term premium at ~0.7% vs a ~1.4% historical median. A drift back toward normal implies ~70bp of further upward pressure on the 10Y, independent of Fed cuts &mdash; a duration risk for 60/40.</p></div>
+      <div class="watch-card"><span class="tag" style="color:var(--amber)">Credit</span><h3>Spreads at record tights</h3><p>HY OAS in the bottom decile leaves no cushion. A 2020&ndash;22 refi wall for CCC issuers meeting higher-for-longer rates is the slow-burn default risk.</p></div>
+      <div class="watch-card"><span class="tag" style="color:var(--amber)">Banking</span><h3>CRE &times; regional banks</h3><p>The known fault line. Office maturities at higher rates drive regional-bank losses; watch KRE relative performance and CRE delinquencies for the realized-loss signal.</p></div>
+      <div class="watch-card"><span class="tag" style="color:var(--red)">Growth</span><h3>Hard data is starting to bend</h3><p>The Jul 2 jobs report (+57k, 74k of downward revisions) is the first real crack &mdash; soft data may be winning the divergence. Watch July ISM and the Aug 7 jobs report to confirm whether this is the turn.</p></div>
+      <div class="watch-card"><span class="tag" style="color:var(--violet)">Fiscal</span><h3>Supply meets the term premium</h3><p>High deficits + Fed runoff + fading foreign demand force the private sector to absorb long-dated paper. The quarterly refunding mix and auction tails are the early-warning system.</p></div>
+      <div class="watch-card"><span class="tag" style="color:var(--amber)">Currency</span><h3>Yen weakness &amp; carry unwind</h3><p>A multi-decade-low yen vs a hawkish Fed raises BoJ/MOF intervention risk; a sharp carry unwind transmits globally to credit and equities fast.</p></div>
+      <div class="watch-card"><span class="tag" style="color:var(--green)">Liquidity</span><h3>TGA rebuild &amp; RRP drain</h3><p>Net liquidity (balance sheet &minus; TGA &minus; RRP) is the quantity that reaches markets. A TGA rebuild with a near-empty RRP would drain reserves directly &mdash; a quiet tightening.</p></div>
+      <div class="watch-card"><span class="tag" style="color:var(--blue)">Inflation</span><h3>Breakeven de-anchoring</h3><p>Breakevens at ~2.2% vs realized CPI 4.2% &mdash; the market calls it transitory. A 5y5y forward break above ~2.5% would say expectations are slipping, forcing the Fed&rsquo;s hand.</p></div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  Macroeconomic Operating System &middot; snapshot Jun 30, 2026. Built on the Dalio debt-cycle &amp; liquidity framework across four pillars and twelve domains.<br>
+  Verification: <span style="color:var(--green)">Live</span> = verified from a public source (Fed, BLS, Treasury, FRED, NY Fed, ISM, Conference Board) at the snapshot date &middot; <span style="color:var(--amber)">Est.</span> = approximate or lagging, verify against a live feed &middot; <span style="color:var(--ink-dim)">Manual</span> = no clean free real-time feed; plug in from a terminal using the linked source.<br>
+  For informational purposes only; not investment advice. Levels move intraday &mdash; confirm before acting.
+</footer>
+
+<script>
+/* =====================================================================
+   REGIME ENGINE — two tiers from one input set.
+   Update REGIME_INPUTS daily; colors recompute from THRESHOLDS.
+   g=green (supportive)  a=amber (watch)  r=red (risk)  b=blue (neutral)
+   ===================================================================== */
+
+const REGIME_INPUTS = {
+  // --- Rates & curve ---
+  ismMfg:54.0, ismSvcs:54.5, payrolls3mo:78, sentimentFalling:true,
+  corePCE:3.4, inflationRising:false, breakeven10y:2.21,
+  termPremium:0.70, curve2s10s:35, curve3m10y:58,
+  // --- Stress & liquidity ---
+  vix:15.8, fundingStress:false, hySpiking:false,
+  liquidityStance:'gradual-drain', policyEasing:false,
+  m2Growth3mo:1.9, bankCreditGrowing:true,
+  // --- Credit ---
+  hyOAS:263, hyWidening:false, igOAS:80,
+  // --- Policy / global / fiscal ---
+  policyStance:'hawkish-hold', dxyTrend:'rising',
+  deficitElevated:true, foreignDemandFading:true,
+  // --- Real economy ---
+  unemployment:4.2, realWageNegative:true, leiWeak:true,
+  creStress:'watch', housingFrozen:true,
+  // context
+  dalioPhase:'late-cycle, labor cooling',
+  curveNote:'2s10s +35bp, term premium positive'
+};
+
+/* ---- TOP-LEVEL: 6 dimensions ---- */
+const TOP = [
+  { key:'Growth',
+    grade:i=>{ const ism=(i.ismMfg+i.ismSvcs)/2;
+      if(ism<50||i.payrolls3mo<50)return['r','Contracting'];
+      if(ism>=52&&i.payrolls3mo>=100&&!i.sentimentFalling&&!i.leiWeak)return['g','Expanding, broad'];
+      if(i.payrolls3mo<100)return['a','Softening, labor cooling'];
+      return['a','Resilient, soft signal']; },
+    rule:i=>`ISM avg ${((i.ismMfg+i.ismSvcs)/2).toFixed(1)} · payrolls 3mo ${i.payrolls3mo}k · sentiment ${i.sentimentFalling?'falling':'firm'} · LEI ${i.leiWeak?'weak':'ok'}`,
+    thresh:'Green: ISM≥52 & payrolls≥100k & sentiment/LEI firm. Amber: expanding but a leading signal soft. Red: ISM<50 or payrolls<50k.' },
+  { key:'Inflation',
+    grade:i=>{ if(i.corePCE>3.0)return['r',i.inflationRising?'Elevated & rising':'Elevated, cooling'];
+      if(i.corePCE>2.5||i.inflationRising)return['a','Above target']; return['g','Near target']; },
+    rule:i=>`Core PCE ${i.corePCE}% ${i.inflationRising?'rising':'stabilizing'} · 10y breakeven ${i.breakeven10y}% (anchored)`,
+    thresh:'Green: core PCE≤2.5% & not rising. Amber: 2.5–3.0%. Red: >3.0%.' },
+  { key:'Financial Stress',
+    grade:i=>{ if(i.vix>30||i.fundingStress||i.hySpiking)return['r','Stressed'];
+      if(i.vix>=20)return['a','Elevated']; return['g',`Low (VIX ${i.vix})`]; },
+    rule:i=>`VIX ${i.vix} · funding ${i.fundingStress?'stressed':'calm'} · HY ${i.hySpiking?'spiking':'stable'}`,
+    thresh:'Green: VIX<20 & no funding/HY stress. Amber: VIX 20–30. Red: VIX>30 or funding spike or HY spiking.' },
+  { key:'Liquidity',
+    grade:i=>{ if(i.policyEasing||i.liquidityStance==='expanding')return['g','Expanding'];
+      if(i.liquidityStance==='active-qt')return['r','Contracting'];
+      if(i.m2Growth3mo>0&&i.bankCreditGrowing)return['a','Tightening, offset by M2'];
+      return['a','Tightening bias']; },
+    rule:i=>`Stance ${i.liquidityStance} · M2 +${i.m2Growth3mo}% 3mo · bank credit ${i.bankCreditGrowing?'growing':'flat'}`,
+    thresh:'Green: Fed easing / balance sheet expanding. Amber: gradual drain (even if M2 growth offsets). Red: active QT.' },
+  { key:'Credit Conditions',
+    grade:i=>{ if(i.hyOAS>500&&i.hyWidening)return['r','Stress emerging'];
+      if(i.hyOAS<325||i.hyWidening)return['a','Loose / thin cushion'];
+      return['g','Orderly']; },
+    rule:i=>`HY OAS ${i.hyOAS}bp · IG ${i.igOAS}bp · ${i.hyWidening?'widening':'stable/tight'}`,
+    thresh:'Green: HY OAS 325–500bp & stable. Amber: <325bp (loose but fragile) or widening. Red: >500bp & widening.' },
+  { key:'Policy Stance',
+    grade:i=>{ if(i.policyStance==='hawkish-hold'||i.policyStance==='hiking')return['r',i.policyStance==='hiking'?'Hiking':'Hawkish hold'];
+      if(i.policyStance==='neutral-hold')return['a','Neutral hold']; return['g','Accommodative']; },
+    rule:i=>`Stance: ${i.policyStance}`,
+    thresh:'Green: easing. Amber: neutral hold. Red: hawkish hold or hiking.' }
+];
+
+/* ---- DETAILED SCORECARD: 12 domains ---- */
+const SCORE = [
+  { d:'Monetary Policy', read:'3.50–3.75%, Sep hike ~50%', sig:['r','Hawkish hold'], imp:'Soft jobs cut hike odds; still restrictive, next FOMC end-Jul.' },
+  { d:'Yield Curve', read:'2s10s +35, TP +0.70%', sig:['a','Premium-led steepening'], imp:'Front end eases on jobs; long end firm on term premium.' },
+  { d:'TIPS / Breakevens', read:'10y BE ~2.21%', sig:['g','Anchored'], imp:'Market calls the inflation spike transitory.' },
+  { d:'Auctions / Dealers', read:'Supply-heavy QRA', sig:['a','Absorption watch'], imp:'Rising long-dated supply pressures term premium.' },
+  { d:'Reserves / Liquidity', read:'Ample, gradual drain', sig:['a','Tightening bias'], imp:'Net liquidity hinges on TGA rebuild & RRP.' },
+  { d:'Credit Markets', read:'HY OAS ~263bp', sig:['a','Tight, thin cushion'], imp:'Tightened further; no concern despite soft jobs.' },
+  { d:'Money / Bank Credit', read:'M2 +1.9%, H.8 +', sig:['a','Reflating'], imp:'Quiet liquidity tailwind under tight spreads.' },
+  { d:'CRE / Regional Banks', read:'Office refi wall', sig:['a','Known fault line'], imp:'Slow-burn regional-bank loss path at high rates.' },
+  { d:'Municipal Credit', read:'Reserves strong', sig:['g','Solid fundamentals'], imp:'Strong GO credit; pensions the long-run risk.' },
+  { d:'Activity / LEI', read:'ISM 54, jobs +57k, LEI soft', sig:['a','Hard data bending'], imp:'Soft data starting to win; watch July ISM & jobs.' },
+  { d:'Labor Internals', read:'+57k, 3mo ~78k, U 4.2%', sig:['a','Cooling sharply'], imp:'Reaccel narrative over; participation-driven U dip.' },
+  { d:'Housing', read:'Lock-in, high rates', sig:['a','Frozen'], imp:'Sticky shelter CPI; weak turnover.' },
+  { d:'Global Central Banks', read:'Fed hawkish, BoJ dovish', sig:['a','Diverging'], imp:'Rate gap lifts USD, pressures the yen.' },
+  { d:'FX / Commodities', read:'DXY ~101, oil ~$69, gold $4.2k', sig:['b','Mixed'], imp:'Oil at pre-war levels disinflates; gold pushing highs.' },
+  { d:'Sovereign / Fiscal', read:'~6%+ deficit, debt up', sig:['r','Structural pressure'], imp:'The engine behind a rising term premium.' }
+];
+
+(function render(){
+  // top-level
+  const list=document.getElementById('regimeList');
+  TOP.forEach(dim=>{
+    const [c,l]=dim.grade(REGIME_INPUTS);
+    const item=document.createElement('div'); item.className='regime-item';
+    item.innerHTML=
+      '<div class="regime-row"><span class="dot '+c+'"></span>'+
+      '<span class="regime-label">'+dim.key+'</span>'+
+      '<span class="regime-state '+c+'">'+l+'</span></div>'+
+      '<div class="regime-rule"><span class="rule-input">'+dim.rule(REGIME_INPUTS)+'</span>'+
+      '<span class="rule-thresh">'+dim.thresh+'</span></div>';
+    list.appendChild(item);
+  });
+  document.getElementById('regimeChips').innerHTML=
+    '<span class="chip">Dalio cycle: '+REGIME_INPUTS.dalioPhase+'</span>'+
+    '<span class="chip">'+REGIME_INPUTS.curveNote+'</span>';
+
+  // toggle
+  const card=document.getElementById('regimeCard'), btn=document.getElementById('regimeToggle');
+  btn.addEventListener('click',()=>{ const on=card.classList.toggle('show-logic');
+    btn.textContent=on?'Hide grading logic':'Show grading logic'; });
+
+  // scorecard
+  const sc=document.getElementById('scorecardTable');
+  SCORE.forEach(r=>{
+    const row=document.createElement('div'); row.className='sc-row';
+    row.innerHTML=
+      '<div class="sc-domain"><span class="dot '+r.sig[0]+'"></span>'+r.d+'</div>'+
+      '<div class="sc-reading">'+r.read+'</div>'+
+      '<div class="sc-signal '+r.sig[0]+'">'+r.sig[1]+'</div>'+
+      '<div class="sc-implication">'+r.imp+'</div>';
+    sc.appendChild(row);
+  });
+
+  // collapsibles
+  document.querySelectorAll('[data-collapse]').forEach(h=>{
+    h.addEventListener('click',()=>h.parentElement.classList.toggle('collapsed'));
+  });
+})();
+</script>
+</body>
+</html>
