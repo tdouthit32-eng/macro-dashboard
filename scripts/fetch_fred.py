@@ -11,6 +11,7 @@ FRED_API_KEY = (os.environ.get("FRED_API_KEY") or "").strip()
 FRED_BASE = "https://api.stlouisfed.org/fred/series/observations"
 
 SERIES_IDS = [
+    # --- Phase B ---
     "T10Y2Y",
     "T10Y3M",
     "T10YIE",
@@ -26,6 +27,16 @@ SERIES_IDS = [
     "HOUST",
     "CSUSHPINSA",
     "CREACBM027NBOG",
+    # --- Phase C1: simple single-series passthroughs ---
+    "SOFR",
+    "T5YIE",
+    "UMCSENT",
+    "DTWEXBGS",
+    "PCOPPUSDM",
+    "FYFSGDA188S",
+    "GFDEGDQ188S",
+    "A091RC1Q027SBEA",
+    "JTSQUR",
 ]
 
 

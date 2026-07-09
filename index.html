@@ -278,8 +278,8 @@ footer a{color:var(--ink-dim);}
       <div class="table-wrap">
         <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
         <div class="t-row"><div class="t-name">Fed Funds Target <span class="vbadge live">Live</span></div><div class="t-value">3.50%&ndash;3.75%</div><div><span class="pill r">Hawkish hold</span></div><div class="t-why">Held 4th straight meeting (Jun 17); dot plot revised up to 3.6&ndash;4.1% YE median under new Chair Warsh.</div></div>
-        <div class="t-row"><div class="t-name">SOFR <span class="vbadge live">Live</span></div><div class="t-value">3.62%</div><div><span class="pill b">Stable</span></div><div class="t-why">Secured overnight benchmark; no funding stress vs the IORB/RRP corridor.</div></div>
-        <div class="t-row"><div class="t-name">Standing Repo / ON RRP <span class="vbadge live">Live</span></div><div class="t-value">3.75% / 3.50%</div><div><span class="pill b">Corridor intact</span></div><div class="t-why">Ceiling and floor of the operating framework; RRP per-counterparty cap raised to $160B/day.</div></div>
+        <div class="t-row" data-fred="SOFR"><div class="t-name">SOFR <span class="vbadge live">Live</span></div><div class="t-value">3.62%</div><div><span class="pill b">Stable</span></div><div class="t-why">Secured overnight benchmark; no funding stress vs the IORB/RRP corridor.</div></div>
+        <div class="t-row"><div class="t-name">Standing Repo / ON RRP <span class="vbadge man">Manual</span></div><div class="t-value">3.75% / 3.50%</div><div><span class="pill b">Corridor intact</span></div><div class="t-why">Ceiling and floor of the operating framework; RRP per-counterparty cap raised to $160B/day.</div></div>
         <div class="t-row"><div class="t-name">Market-Implied Path <span class="vbadge est">Est.</span></div><div class="t-value">~50% Sep hike</div><div><span class="pill a">Hike odds fading</span></div><div class="t-why">Soft June jobs (Jul 2) cut September-hike odds to ~50% from ~64%; Warsh noted eased inflation expectations. Next FOMC end of July.</div></div>
       </div>
       </div>
@@ -310,10 +310,10 @@ footer a{color:var(--ink-dim);}
       <div class="table-wrap">
         <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
         <div class="t-row" data-fred="T10YIE"><div class="t-name">10Y Breakeven <span class="vbadge live">Live</span></div><div class="t-value">~2.21%</div><div><span class="pill g">Anchored</span></div><div class="t-why">Market-implied 10yr average inflation. Well below realized CPI &mdash; expectations remain credibly anchored despite the energy shock.</div></div>
-        <div class="t-row"><div class="t-name">5Y Breakeven <span class="vbadge est">Est.</span></div><div class="t-value">~2.4%</div><div><span class="pill a">Slightly elevated</span></div><div class="t-why">Nearer-term breakevens sit above the 10Y &mdash; a mild hump reflecting the current energy-driven price pressure.</div></div>
+        <div class="t-row" data-fred="T5YIE"><div class="t-name">5Y Breakeven <span class="vbadge live">Live</span></div><div class="t-value">~2.4%</div><div><span class="pill a">Slightly elevated</span></div><div class="t-why">Nearer-term breakevens sit above the 10Y &mdash; a mild hump reflecting the current energy-driven price pressure.</div></div>
         <div class="t-row" data-fred="DFII10"><div class="t-name">10Y Real Yield (TIPS) <span class="vbadge live">Live</span></div><div class="t-value">~2.15%</div><div><span class="pill a">Restrictive</span></div><div class="t-why">Positive real yields above ~2% are genuinely restrictive for the real economy &mdash; a headwind to rate-sensitive investment.</div></div>
         <div class="t-row" data-fred="T5YIFR"><div class="t-name">5y5y Forward <span class="vbadge live">Live</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">The Fed&rsquo;s favored long-run expectations gauge; a break above ~2.5% would signal de-anchoring risk.</div></div>
-        <div class="note-row">Live: <a href="https://fred.stlouisfed.org/series/T10YIE" target="_blank">FRED 10Y breakeven</a> &middot; <a href="https://fred.stlouisfed.org/series/T5YIFR" target="_blank">FRED 5y5y forward</a> &middot; <a href="https://fred.stlouisfed.org/series/DFII10" target="_blank">FRED 10Y TIPS real yield</a></div>
+        <div class="note-row">Live: <a href="https://fred.stlouisfed.org/series/T10YIE" target="_blank">FRED 10Y breakeven</a> &middot; <a href="https://fred.stlouisfed.org/series/T5YIE" target="_blank">FRED 5Y breakeven</a> &middot; <a href="https://fred.stlouisfed.org/series/T5YIFR" target="_blank">FRED 5y5y forward</a> &middot; <a href="https://fred.stlouisfed.org/series/DFII10" target="_blank">FRED 10Y TIPS real yield</a></div>
       </div>
       </div>
     </section>
@@ -449,8 +449,8 @@ footer a{color:var(--ink-dim);}
         <div class="t-row"><div class="t-name">ISM Mfg / Services <span class="vbadge live">Live</span></div><div class="t-value">54.0 / 54.5</div><div><span class="pill g">Expansion</span></div><div class="t-why">Both at/near multi-year highs; price sub-indices elevated on fuel &amp; freight.</div></div>
         <div class="t-row"><div class="t-name">Conference Board LEI <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill a">Soft</span></div><div class="t-why">The 10-component leading index has been weak/negative &mdash; the clearest "soft data" warning vs firm hard data.</div></div>
         <div class="t-row"><div class="t-name">June Payrolls <span class="vbadge live">Live</span></div><div class="t-value">+57k</div><div><span class="pill r">Sharp miss</span></div><div class="t-why">Well below ~115k consensus; Apr&ndash;May revised down 74k combined. Leisure/hospitality &minus;61k. The soft data is starting to win.</div></div>
-        <div class="t-row"><div class="t-name">Consumer Sentiment (UMich) <span class="vbadge live">Live</span></div><div class="t-value">Lowest since Jun 2022</div><div><span class="pill r">Deteriorating</span></div><div class="t-why">The sharpest hard/soft divergence; June payrolls suggest hard data is now bending toward it, as history warns.</div></div>
-        <div class="note-row">Next: June CPI Jul 14 &middot; July jobs Aug 7 &middot; <a href="https://www.conference-board.org/topics/us-leading-indicators" target="_blank">Conference Board LEI</a> &middot; Source: BLS (Jul 2), Fed SEP (Jun 17).</div>
+        <div class="t-row" data-fred="UMCSENT"><div class="t-name">Consumer Sentiment (UMich) <span class="vbadge live">Live</span></div><div class="t-value">Lowest since Jun 2022</div><div><span class="pill r">Deteriorating</span></div><div class="t-why">The sharpest hard/soft divergence; June payrolls suggest hard data is now bending toward it, as history warns.</div></div>
+        <div class="note-row">Live: <a href="https://fred.stlouisfed.org/series/UMCSENT" target="_blank">FRED consumer sentiment</a> &middot; Next: June CPI Jul 14 &middot; July jobs Aug 7 &middot; <a href="https://www.conference-board.org/topics/us-leading-indicators" target="_blank">Conference Board LEI</a> &middot; Source: BLS (Jul 2), Fed SEP (Jun 17).</div>
       </div>
       </div>
     </section>
@@ -465,9 +465,9 @@ footer a{color:var(--ink-dim);}
         <div class="t-row"><div class="t-name">Payrolls (3-mo avg) <span class="vbadge live">Live</span></div><div class="t-value">~+78k/mo</div><div><span class="pill a">Cooling sharply</span></div><div class="t-why">Collapsed from ~188k after the +57k June print and 74k of downward revisions &mdash; now roughly at the 12-mo trend (~36k). The reacceleration narrative is over.</div></div>
         <div class="t-row"><div class="t-name">Unemployment / Participation <span class="vbadge live">Live</span></div><div class="t-value">4.2% / 61.5%</div><div><span class="pill a">Falling for wrong reason</span></div><div class="t-why">Rate dipped to 4.2%, but driven by a 0.3pt participation drop (lowest since 2021) &mdash; 507k fewer employed in the household survey, not genuine strength.</div></div>
         <div class="t-row"><div class="t-name">Real Wage Growth <span class="vbadge live">Live</span></div><div class="t-value">AHE +3.5% vs CPI 4.2%</div><div><span class="pill a">Negative real</span></div><div class="t-why">Wages still lag inflation &mdash; Fed reads it as reduced wage-price-spiral risk; consumers feel a squeeze.</div></div>
-        <div class="t-row"><div class="t-name">Quits / JOLTS / Temp Help <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Falling quits &amp; temp-help payrolls lead broader softening &mdash; the early-warning internals.</div></div>
+        <div class="t-row" data-fred="JTSQUR"><div class="t-name">Quits / JOLTS / Temp Help <span class="vbadge live">Live</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Falling quits &amp; temp-help payrolls lead broader softening &mdash; the early-warning internals.</div></div>
         <div class="t-row"><div class="t-name">Sectoral Breadth (AI impact) <span class="vbadge est">Est.</span></div><div class="t-value">Narrowing</div><div><span class="pill a">Watch</span></div><div class="t-why">Gains concentrated in health/leisure/government; financial activities &amp; some professional services shedding jobs, partly AI-driven.</div></div>
-        <div class="note-row">Live: <a href="https://www.bls.gov/ces/" target="_blank">BLS payrolls</a> &middot; <a href="https://www.bls.gov/jlt/" target="_blank">JOLTS</a> &middot; Employment Situation for June out Jul 2.</div>
+        <div class="note-row">Live: <a href="https://www.bls.gov/ces/" target="_blank">BLS payrolls</a> &middot; <a href="https://www.bls.gov/jlt/" target="_blank">JOLTS</a> &middot; <a href="https://fred.stlouisfed.org/series/JTSQUR" target="_blank">FRED quits rate</a> &middot; Employment Situation for June out Jul 2.</div>
       </div>
       </div>
     </section>
@@ -510,7 +510,7 @@ footer a{color:var(--ink-dim);}
         <div class="t-row"><div class="t-name">ECB <span class="vbadge est">Est.</span></div><div class="t-value">Hiked on inflation</div><div><span class="pill a">Tightening</span></div><div class="t-why">Raised rates to counter accelerating prices, but soft Eurozone inflation prints limit euro strength vs USD.</div></div>
         <div class="t-row"><div class="t-name">Bank of Japan <span class="vbadge est">Est.</span></div><div class="t-value">Fiscally dovish</div><div><span class="pill r">Yen at multi-decade low</span></div><div class="t-why">Dovish stance + a hawkish Fed = a historically weak yen; raises BoJ/MOF intervention &amp; carry-unwind risk.</div></div>
         <div class="t-row"><div class="t-name">PBoC (China) <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">China M2 growth is running significantly below trend &mdash; a global-demand and commodity drag to watch.</div></div>
-        <div class="note-row">Live FX: <a href="https://www.investing.com/currencies/us-dollar-index" target="_blank">DXY ~101.1</a> &middot; EUR/USD ~1.14 &middot; central-bank calendars via terminal.</div>
+        <div class="note-row">Live FX: <a href="https://www.investing.com/currencies/us-dollar-index" target="_blank">ICE DXY</a> (see Trade-Wtd USD proxy below for an auto-updating alternative) &middot; EUR/USD ~1.14 &middot; central-bank calendars via terminal.</div>
       </div>
       </div>
     </section>
@@ -521,10 +521,11 @@ footer a{color:var(--ink-dim);}
       <div class="collapse-body">
       <div class="table-wrap">
         <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
-        <div class="t-row"><div class="t-name">DXY <span class="vbadge est">Est.</span></div><div class="t-value">~101.1</div><div><span class="pill a">14&ndash;15 mo high</span></div><div class="t-why">Hawkish-Fed repricing the dominant driver; a strong dollar tightens global conditions.</div></div>
+        <div class="t-row" data-fred="DTWEXBGS"><div class="t-name">Trade-Wtd USD (proxy) <span class="vbadge est">Est.</span></div><div class="t-value">~101.1</div><div><span class="pill a">14&ndash;15 mo high</span></div><div class="t-why">Fed broad trade-weighted dollar index &mdash; a free proxy for DXY (different basket/methodology, so the level won't match ICE DXY exactly). Hawkish-Fed repricing the dominant driver; a strong dollar tightens global conditions.</div></div>
         <div class="t-row"><div class="t-name">WTI / Brent <span class="vbadge est">Est.</span></div><div class="t-value">~$68.8 / ~$72</div><div><span class="pill g">Pre-war levels</span></div><div class="t-why">Wholesale energy back to before the Middle East conflict; the key driver of recent energy disinflation and Warsh&rsquo;s softer inflation read.</div></div>
         <div class="t-row"><div class="t-name">Gold <span class="vbadge est">Est.</span></div><div class="t-value">~$4,187</div><div><span class="pill a">Pushing highs</span></div><div class="t-why">Firm on softer rate-hike odds and a slightly weaker dollar; safe-haven and inflation-hedge demand outweighing the real-rate headwind.</div></div>
-        <div class="t-row"><div class="t-name">Copper <span class="vbadge est">Est.</span></div><div class="t-value">~$6.18/lb</div><div><span class="pill b">Stable</span></div><div class="t-why">"Dr. Copper" steady &mdash; consistent with the resilient-growth read, not a sharp slowdown.</div></div>
+        <div class="t-row" data-fred="PCOPPUSDM"><div class="t-name">Copper <span class="vbadge est">Est.</span></div><div class="t-value">~$6.18/lb</div><div><span class="pill b">Stable</span></div><div class="t-why">"Dr. Copper" steady &mdash; consistent with the resilient-growth read, not a sharp slowdown.</div></div>
+        <div class="note-row">Live: <a href="https://fred.stlouisfed.org/series/DTWEXBGS" target="_blank">FRED trade-weighted dollar</a> &middot; <a href="https://fred.stlouisfed.org/series/PCOPPUSDM" target="_blank">FRED copper price</a> &middot; WTI/Brent/gold via terminal.</div>
       </div>
       </div>
     </section>
@@ -536,11 +537,11 @@ footer a{color:var(--ink-dim);}
       <div class="sec-sub">The long-term debt cycle in action. High deficits + Fed runoff mean the private sector absorbs more long-dated supply &mdash; the structural engine behind the rising term premium in Pillar I, and the slow-burn risk to the dollar&rsquo;s reserve role.</div>
       <div class="table-wrap">
         <div class="t-row head"><div>Indicator</div><div>Latest</div><div>Status</div><div>Why it matters</div></div>
-        <div class="t-row"><div class="t-name">Federal Deficit / GDP <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill a">Elevated</span></div><div class="t-why">Persistent ~6%+ deficits in an expansion are historically unusual &mdash; the supply driver of term premium.</div></div>
-        <div class="t-row"><div class="t-name">Debt / GDP <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill a">Rising</span></div><div class="t-why">The long-term debt-cycle metric; rising trajectory pressures the term premium &amp; long-run dollar.</div></div>
-        <div class="t-row"><div class="t-name">Net Interest Outlays <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill a">Surging</span></div><div class="t-why">Interest now rivals major budget lines; higher-for-longer rates compound the fiscal math.</div></div>
+        <div class="t-row" data-fred="FYFSGDA188S"><div class="t-name">Federal Deficit / GDP <span class="vbadge est">Est.</span></div><div class="t-value">See source</div><div><span class="pill a">Elevated</span></div><div class="t-why">Persistent ~6%+ deficits in an expansion are historically unusual &mdash; the supply driver of term premium.</div></div>
+        <div class="t-row" data-fred="GFDEGDQ188S"><div class="t-name">Debt / GDP <span class="vbadge est">Est.</span></div><div class="t-value">See source</div><div><span class="pill a">Rising</span></div><div class="t-why">The long-term debt-cycle metric; rising trajectory pressures the term premium &amp; long-run dollar.</div></div>
+        <div class="t-row" data-fred="A091RC1Q027SBEA"><div class="t-name">Net Interest Outlays <span class="vbadge est">Est.</span></div><div class="t-value">See source</div><div><span class="pill a">Surging</span></div><div class="t-why">Interest now rivals major budget lines; higher-for-longer rates compound the fiscal math.</div></div>
         <div class="t-row"><div class="t-name">Foreign Treasury Holdings (TIC) <span class="vbadge man">Manual</span></div><div class="t-value">See source</div><div><span class="pill b">&mdash;</span></div><div class="t-why">Declining foreign official demand + heavy issuance is a term-premium &amp; reserve-status risk; ties to auction indirects.</div></div>
-        <div class="note-row">Live: <a href="https://fiscaldata.treasury.gov/" target="_blank">Treasury fiscal data</a> &middot; <a href="https://ticdata.treasury.gov/" target="_blank">TIC foreign holdings</a> &middot; <a href="https://www.cbo.gov/" target="_blank">CBO projections</a></div>
+        <div class="note-row">Live: <a href="https://fred.stlouisfed.org/series/FYFSGDA188S" target="_blank">FRED deficit/GDP</a> (annual) &middot; <a href="https://fred.stlouisfed.org/series/GFDEGDQ188S" target="_blank">FRED debt/GDP</a> (quarterly) &middot; <a href="https://fred.stlouisfed.org/series/A091RC1Q027SBEA" target="_blank">FRED net interest</a> (quarterly) &middot; <a href="https://fiscaldata.treasury.gov/" target="_blank">Treasury fiscal data</a> &middot; <a href="https://ticdata.treasury.gov/" target="_blank">TIC foreign holdings</a> &middot; <a href="https://www.cbo.gov/" target="_blank">CBO projections</a></div>
       </div>
       </div>
     </section>
@@ -687,7 +688,26 @@ const FRED_DISPLAY = {
   RRPONTSYD:      v => `~${fmtBillions(v)}`,
   MORTGAGE30US:   v => `${v.toFixed(2)}%`,
   HOUST:          v => `${(v/1000).toFixed(2)}M SAAR`,
-  CSUSHPINSA:     v => `${v.toFixed(1)} (NSA)`
+  CSUSHPINSA:     v => `${v.toFixed(1)} (NSA)`,
+  SOFR:           v => `${v.toFixed(2)}%`,
+  T5YIE:          v => `~${v.toFixed(2)}%`,
+  UMCSENT:        v => `${v.toFixed(1)}`,
+  DTWEXBGS:       v => `~${v.toFixed(1)}`,
+  PCOPPUSDM:      v => `~$${(v/2204.62).toFixed(2)}/lb`, // FRED reports USD per metric ton
+  FYFSGDA188S:    v => `${v.toFixed(1)}%`,
+  GFDEGDQ188S:    v => `${v.toFixed(1)}%`,
+  A091RC1Q027SBEA:v => fmtBillions(v),
+  JTSQUR:         v => `${v.toFixed(1)}%`
+};
+
+// Badge cadence override — series that update less than daily shouldn't claim
+// same-day freshness like the Phase B daily series do. Anything not listed
+// here defaults to 'live' (unchanged behavior for all Phase B rows).
+const FRED_CADENCE = {
+  PCOPPUSDM: 'est',
+  FYFSGDA188S: 'est',
+  GFDEGDQ188S: 'est',
+  A091RC1Q027SBEA: 'est'
 };
 
 async function hydrateFromData(){
@@ -703,7 +723,12 @@ async function hydrateFromData(){
       const valEl = row.querySelector('.t-value');
       if(valEl) valEl.textContent = FRED_DISPLAY[id](entry.value);
       const badge = row.querySelector('.vbadge');
-      if(badge){ badge.classList.remove('man','est'); badge.classList.add('live'); badge.textContent='Live'; }
+      if(badge){
+        const cadence = FRED_CADENCE[id] || 'live';
+        badge.classList.remove('man','est','live');
+        badge.classList.add(cadence);
+        badge.textContent = cadence==='est' ? 'Est.' : 'Live';
+      }
     });
 
     if(data.generated_at){
