@@ -4,9 +4,10 @@ import os
 import sys
 import urllib.request
 import urllib.parse
+import urllib.error
 from datetime import datetime, timezone
 
-FRED_API_KEY = os.environ.get("FRED_API_KEY")
+FRED_API_KEY = (os.environ.get("FRED_API_KEY") or "").strip()
 FRED_BASE = "https://api.stlouisfed.org/fred/series/observations"
 
 SERIES_IDS = [
@@ -40,6 +41,10 @@ def fetch_latest(series_id, errors):
     try:
         with urllib.request.urlopen(url, timeout=30) as resp:
             payload = json.load(resp)
+    except urllib.error.HTTPError as exc:
+        body = exc.read().decode("utf-8", errors="replace")
+        errors.append(f"{series_id}: HTTP {exc.code} - {body.strip()}")
+        return None
     except Exception as exc:
         errors.append(f"{series_id}: request failed ({exc})")
         return None
@@ -67,6 +72,13 @@ def main():
     if not FRED_API_KEY:
         print("FRED_API_KEY environment variable is not set", file=sys.stderr)
         sys.exit(1)
+    if len(FRED_API_KEY) != 32 or not FRED_API_KEY.isalnum():
+        print(
+            f"Warning: FRED_API_KEY doesn't look like a valid key "
+            f"(length {len(FRED_API_KEY)}, expected 32 alphanumeric chars). "
+            "Check the secret for stray quotes/whitespace.",
+            file=sys.stderr,
+        )
 
     errors = []
     series = {}
