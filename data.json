@@ -1,34 +1,34 @@
 {
-  "generated_at": "2026-10-01T01:42:48Z",
+  "generated_at": "2026-10-02T01:53:40Z",
   "source": "FRED (api.stlouisfed.org)",
   "series": {
     "T10Y2Y": {
-      "value": 0.41,
-      "date": "2026-09-30"
+      "value": 0.46,
+      "date": "2026-10-01"
     },
     "T10Y3M": {
-      "value": 1.09,
-      "date": "2026-09-30"
+      "value": 1.07,
+      "date": "2026-10-01"
     },
     "T10YIE": {
       "value": 2.36,
-      "date": "2026-09-30"
+      "date": "2026-10-01"
     },
     "T5YIFR": {
       "value": 2.36,
-      "date": "2026-09-30"
+      "date": "2026-10-01"
     },
     "DFII10": {
-      "value": 2.91,
-      "date": "2026-09-29"
+      "value": 2.93,
+      "date": "2026-09-30"
     },
     "BAMLH0A0HYM2": {
-      "value": 3.08,
-      "date": "2026-09-29"
+      "value": 3.12,
+      "date": "2026-09-30"
     },
     "BAMLC0A0CM": {
       "value": 0.84,
-      "date": "2026-09-29"
+      "date": "2026-09-30"
     },
     "M2SL": {
       "value": 23342.8,
@@ -39,16 +39,16 @@
       "date": "2026-04-01"
     },
     "WRESBAL": {
-      "value": 2930193.0,
-      "date": "2026-09-23"
-    },
-    "RRPONTSYD": {
-      "value": 11.539,
+      "value": 2948090.0,
       "date": "2026-09-30"
     },
+    "RRPONTSYD": {
+      "value": 0.35,
+      "date": "2026-10-01"
+    },
     "MORTGAGE30US": {
-      "value": 7.03,
-      "date": "2026-09-24"
+      "value": 7.28,
+      "date": "2026-10-01"
     },
     "HOUST": {
       "value": 1275.0,
@@ -63,12 +63,12 @@
       "date": "2026-08-01"
     },
     "SOFR": {
-      "value": 3.88,
-      "date": "2026-09-29"
+      "value": 3.9,
+      "date": "2026-09-30"
     },
     "T5YIE": {
       "value": 2.36,
-      "date": "2026-09-30"
+      "date": "2026-10-01"
     },
     "UMCSENT": {
       "value": 51.7,
@@ -101,7 +101,7 @@
   },
   "derived": {
     "HY_IG_SPREAD_BP": {
-      "value": 224.0,
+      "value": 228.0,
       "formula": "(BAMLH0A0HYM2 - BAMLC0A0CM) * 100"
     }
   },
