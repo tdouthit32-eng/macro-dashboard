@@ -1,34 +1,34 @@
 {
-  "generated_at": "2026-11-20T03:47:44Z",
+  "generated_at": "2026-11-21T03:38:47Z",
   "source": "FRED (api.stlouisfed.org)",
   "series": {
     "T10Y2Y": {
-      "value": 0.28,
-      "date": "2026-11-19"
+      "value": 0.29,
+      "date": "2026-11-20"
     },
     "T10Y3M": {
-      "value": 0.7,
-      "date": "2026-11-19"
+      "value": 0.6,
+      "date": "2026-11-20"
     },
     "T10YIE": {
-      "value": 2.16,
-      "date": "2026-11-19"
+      "value": 2.15,
+      "date": "2026-11-20"
     },
     "T5YIFR": {
-      "value": 2.1,
-      "date": "2026-11-19"
+      "value": 2.12,
+      "date": "2026-11-20"
     },
     "DFII10": {
       "value": 2.88,
-      "date": "2026-11-18"
+      "date": "2026-11-19"
     },
     "BAMLH0A0HYM2": {
-      "value": 3.47,
-      "date": "2026-11-18"
+      "value": 3.52,
+      "date": "2026-11-19"
     },
     "BAMLC0A0CM": {
-      "value": 0.93,
-      "date": "2026-11-18"
+      "value": 0.94,
+      "date": "2026-11-19"
     },
     "M2SL": {
       "value": 23413.9,
@@ -43,8 +43,8 @@
       "date": "2026-11-18"
     },
     "RRPONTSYD": {
-      "value": 0.405,
-      "date": "2026-11-19"
+      "value": 0.401,
+      "date": "2026-11-20"
     },
     "MORTGAGE30US": {
       "value": 7.28,
@@ -59,20 +59,20 @@
       "date": "2026-08-01"
     },
     "CREACBM027NBOG": {
-      "value": 3154.2501,
+      "value": 3155.8656,
       "date": "2026-10-01"
     },
     "SOFR": {
-      "value": 3.9,
-      "date": "2026-11-18"
-    },
-    "T5YIE": {
-      "value": 2.22,
+      "value": 3.91,
       "date": "2026-11-19"
     },
+    "T5YIE": {
+      "value": 2.18,
+      "date": "2026-11-20"
+    },
     "UMCSENT": {
-      "value": 48.1,
-      "date": "2026-09-01"
+      "value": 48.0,
+      "date": "2026-10-01"
     },
     "DTWEXBGS": {
       "value": 122.6503,
@@ -101,7 +101,7 @@
   },
   "derived": {
     "HY_IG_SPREAD_BP": {
-      "value": 254.0,
+      "value": 258.0,
       "formula": "(BAMLH0A0HYM2 - BAMLC0A0CM) * 100"
     }
   },
